@@ -1,0 +1,6 @@
+[package]
+name = "soap_test"
+version = "0.1.0"
+authors = ["bryan"]
+
+[dependencies]
