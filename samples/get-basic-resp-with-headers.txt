@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Cache-Control: private
+Content-Type: text/xml; charset=utf-8
+Vary: Accept-Encoding
+Server: Microsoft-IIS/10.0
+X-AspNet-Version: 4.0.30319
+X-SourceFiles: =?UTF-8?B?QzpcVXNlcnNcYnJ5YW5cUHJvamVjdHNcV2NmU2VydmljZTFcV2NmU2VydmljZTFcU2VydmljZTEuc3Zj?=
+X-Powered-By: ASP.NET
+Date: Sun, 12 Mar 2017 20:24:17 GMT
+Content-Length: 203
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><GetDataResponse xmlns="http://tempuri.org/"><GetDataResult>You entered: 10</GetDataResult></GetDataResponse></s:Body></s:Envelope>

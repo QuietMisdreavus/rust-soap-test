@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Cache-Control: private
+Content-Type: text/xml; charset=utf-8
+Vary: Accept-Encoding
+Server: Microsoft-IIS/10.0
+X-AspNet-Version: 4.0.30319
+X-SourceFiles: =?UTF-8?B?QzpcVXNlcnNcYnJ5YW5cUHJvamVjdHNcV2NmU2VydmljZTFcV2NmU2VydmljZTFcU2VydmljZTEuc3Zj?=
+X-Powered-By: ASP.NET
+Date: Sun, 12 Mar 2017 20:24:17 GMT
+Content-Length: 452
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><GetDataUsingDataContractResponse xmlns="http://tempuri.org/"><GetDataUsingDataContractResult xmlns:a="http://schemas.datacontract.org/2004/07/WcfService1" xmlns:i="http://www.w3.org/2001/XMLSchema-instance"><a:BoolValue>true</a:BoolValue><a:StringValue>This is a testSuffix</a:StringValue></GetDataUsingDataContractResult></GetDataUsingDataContractResponse></s:Body></s:Envelope>

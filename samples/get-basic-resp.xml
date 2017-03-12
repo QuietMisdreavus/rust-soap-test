@@ -1,0 +1,8 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Header />
+  <s:Body>
+    <GetDataResponse xmlns="http://tempuri.org/">
+      <GetDataResult>You entered: 125</GetDataResult>
+    </GetDataResponse>
+  </s:Body>
+</s:Envelope>
