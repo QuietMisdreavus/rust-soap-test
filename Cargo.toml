@@ -1,6 +1,8 @@
 [package]
 name = "soap_test"
 version = "0.1.0"
-authors = ["bryan"]
+authors = ["QuietMisdreavus <grey@quietmisdreavus.net>"]
 
 [dependencies]
+hyper = "0.10.5"
+xml-rs = "0.4.1"
