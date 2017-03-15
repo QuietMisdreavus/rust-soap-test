@@ -1,6 +1,10 @@
 #[macro_use] extern crate hyper;
 extern crate xml;
 
+mod elem;
+
+use elem::ToXml;
+
 use std::io::{Read, Write};
 use std::error::Error;
 
@@ -40,14 +44,36 @@ fn soap_envelope<W, F>(sink: W, mut body: F) -> writer::Result<W>
 }
 
 fn get_data_body<W: Write>(sink: &mut EventWriter<W>, value: i32) -> writer::Result<()> {
-    //NOTE: the element names and namespaces are yanked from the WSDL
-    sink.write(XmlEvent::start_element("GetData").default_ns("http://tempuri.org/"))?;
-    sink.write(XmlEvent::start_element("value"))?;
-    sink.write(value.to_string().as_str())?;
-    sink.write(XmlEvent::end_element())?;
-    sink.write(XmlEvent::end_element())?;
+    GetDataRequest {
+        value: value,
+    }.to_xml().serialize(sink)
+}
 
-    Ok(())
+struct GetDataRequest {
+    value: i32,
+}
+
+impl ToXml for GetDataRequest {
+    fn to_xml(&self) -> elem::Element {
+        //NOTE: the element names and namespaces are yanked from the WSDL
+        elem::Element {
+            name: elem::Name {
+                local_name: "GetData".to_string(),
+                namespace: Some("http://tempuri.org/".to_string()),
+                prefix: None,
+            },
+            content: elem::ElemContent::Children(vec![
+                elem::Element {
+                    name: elem::Name {
+                        local_name: "value".to_string(),
+                        namespace: None,
+                        prefix: None,
+                    },
+                    content: elem::ElemContent::Text(self.value.to_string()),
+                }
+            ])
+        }
+    }
 }
 
 fn get_data(value: i32) -> Result<String, Box<Error>> {
