@@ -6,3 +6,4 @@ authors = ["QuietMisdreavus <grey@quietmisdreavus.net>"]
 [dependencies]
 hyper = "0.10.5"
 xml-rs = "0.4.1"
+sulfate-xml = { path = "../sulfate-xml" }

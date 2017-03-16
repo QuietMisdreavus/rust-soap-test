@@ -3,6 +3,7 @@ name = "soap_test"
 version = "0.1.0"
 dependencies = [
  "hyper 0.10.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sulfate-xml 0.1.0",
  "xml-rs 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -112,6 +113,13 @@ dependencies = [
 name = "semver"
 version = "0.1.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "sulfate-xml"
+version = "0.1.0"
+dependencies = [
+ "xml-rs 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "time"

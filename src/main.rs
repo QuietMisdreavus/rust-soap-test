@@ -1,9 +1,10 @@
 #[macro_use] extern crate hyper;
 extern crate xml;
+extern crate sulfate_xml;
 
-mod elem;
+//mod elem;
 
-use elem::ToXml;
+use sulfate_xml::ToXml;
 
 use std::io::{Read, Write};
 use std::error::Error;
@@ -54,25 +55,13 @@ struct GetDataRequest {
 }
 
 impl ToXml for GetDataRequest {
-    fn to_xml(&self) -> elem::Element {
+    fn to_xml(&self) -> sulfate_xml::Element {
         //NOTE: the element names and namespaces are yanked from the WSDL
-        elem::Element {
-            name: elem::Name {
-                local_name: "GetData".to_string(),
-                namespace: Some("http://tempuri.org/".to_string()),
-                prefix: None,
-            },
-            content: elem::ElemContent::Children(vec![
-                elem::Element {
-                    name: elem::Name {
-                        local_name: "value".to_string(),
-                        namespace: None,
-                        prefix: None,
-                    },
-                    content: elem::ElemContent::Text(self.value.to_string()),
-                }
-            ])
-        }
+        let mut ret = sulfate_xml::Element::new_default_ns("GetData", "http://tempuri.org/");
+        let mut value = sulfate_xml::Element::new("value");
+        value.push_text(self.value.to_string());
+        ret.push_child(value);
+        ret
     }
 }
 
