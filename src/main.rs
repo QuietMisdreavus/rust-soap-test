@@ -6,7 +6,7 @@ extern crate sulfate_xml;
 
 use sulfate_xml::{ToXml, Element};
 
-use std::io::{Read, Write};
+use std::io::Write;
 use std::error::Error;
 
 use hyper::client::{Client, Body};
@@ -54,7 +54,7 @@ impl ToXml for GetDataRequest {
     }
 }
 
-fn get_data(value: i32) -> Result<String, Box<Error>> {
+fn get_data(value: i32) -> Result<Element<'static>, Box<Error>> {
     let mut buf: Vec<u8> = Vec::new();
     let msg = SoapEnvelope(GetDataRequest{ value });
     let msg = msg.to_xml();
@@ -63,15 +63,13 @@ fn get_data(value: i32) -> Result<String, Box<Error>> {
 
     let client = Client::new();
     let body = Body::BufBody(&buf, buf.len());
-    let mut resp = client.post(SERVICE_URL)
+    let resp = client.post(SERVICE_URL)
                          .body(body)
                          .header(ContentType(CONTENT_XML.parse().unwrap()))
                          .header(SoapAction(ACTION.to_string()))
                          .send()?;
 
-    //TODO: actually parse the XML output >_>
-    let mut out = String::new();
-    resp.read_to_string(&mut out)?;
+    let out = Element::from_stream(resp)?;
 
     Ok(out)
 }
@@ -79,5 +77,6 @@ fn get_data(value: i32) -> Result<String, Box<Error>> {
 fn main() {
     let resp = get_data(33).unwrap();
 
-    println!("{}", resp);
+    println!();
+    println!("{:#}", resp);
 }
