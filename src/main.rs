@@ -4,14 +4,13 @@ extern crate sulfate_xml;
 
 //mod elem;
 
-use sulfate_xml::ToXml;
+use sulfate_xml::{ToXml, Element};
 
 use std::io::{Read, Write};
 use std::error::Error;
 
 use hyper::client::{Client, Body};
 use hyper::header::ContentType;
-use xml::writer::{self, EventWriter, XmlEvent};
 
 header! { (SoapAction, "SOAPAction") => [String] }
 
@@ -28,26 +27,16 @@ const SERVICE_URL: &'static str = "http://localhost:53016/Service1.svc";
 ///The URL to use as a `SoapAction` when performing a `GetData`.
 const ACTION: &'static str = "http://tempuri.org/IService1/GetData";
 
-fn soap_envelope<W, F>(sink: W, mut body: F) -> writer::Result<W>
-    where W: Write,
-          F: FnMut(&mut EventWriter<W>) -> writer::Result<()>
-{
-    let mut sink = EventWriter::new(sink);
+struct SoapEnvelope<T: ToXml>(T);
 
-    //NOTE: the element names and namespaces here are SOAP standard
-    sink.write(XmlEvent::start_element("s:Envelope").ns("s", SOAP_NS))?;
-    sink.write(XmlEvent::start_element("s:Body"))?;
-    body(&mut sink)?;
-    sink.write(XmlEvent::end_element())?;
-    sink.write(XmlEvent::end_element())?;
-
-    Ok(sink.into_inner())
-}
-
-fn get_data_body<W: Write>(sink: &mut EventWriter<W>, value: i32) -> writer::Result<()> {
-    GetDataRequest {
-        value: value,
-    }.to_xml().serialize(sink)
+impl<T: ToXml> ToXml for SoapEnvelope<T> {
+    fn to_xml(&self) -> Element {
+        let mut envelope = Element::new_ns_prefix("Envelope", SOAP_NS, "s");
+        let mut body = Element::new_ns_prefix("Body", SOAP_NS, "s");
+        body.push_child(self.0.to_xml());
+        envelope.push_child(body);
+        envelope
+    }
 }
 
 struct GetDataRequest {
@@ -55,7 +44,7 @@ struct GetDataRequest {
 }
 
 impl ToXml for GetDataRequest {
-    fn to_xml(&self) -> sulfate_xml::Element {
+    fn to_xml(&self) -> Element {
         //NOTE: the element names and namespaces are yanked from the WSDL
         let mut ret = sulfate_xml::Element::new_default_ns("GetData", "http://tempuri.org/");
         let mut value = sulfate_xml::Element::new("value");
@@ -66,8 +55,11 @@ impl ToXml for GetDataRequest {
 }
 
 fn get_data(value: i32) -> Result<String, Box<Error>> {
-    let buf: Vec<u8> = Vec::new();
-    let buf = soap_envelope(buf, |sink| get_data_body(sink, value))?;
+    let mut buf: Vec<u8> = Vec::new();
+    let msg = SoapEnvelope(GetDataRequest{ value });
+    let msg = msg.to_xml();
+    println!("{:#}", msg);
+    write!(buf, "{}", msg)?;
 
     let client = Client::new();
     let body = Body::BufBody(&buf, buf.len());
