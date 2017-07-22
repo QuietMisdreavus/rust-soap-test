@@ -1,5 +1,4 @@
 #[macro_use] extern crate hyper;
-extern crate xml;
 extern crate sulfate_xml;
 
 //mod elem;

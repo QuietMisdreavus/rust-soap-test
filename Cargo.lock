@@ -4,7 +4,6 @@ version = "0.1.0"
 dependencies = [
  "hyper 0.10.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "sulfate-xml 0.1.0",
- "xml-rs 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
