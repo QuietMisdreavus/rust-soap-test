@@ -82,12 +82,11 @@ impl<T: FromXml> FromXml for SoapEnvelope<T> {
 
     fn from_xml(src: &Element) -> Result<Self, SoapError<T::Error>> {
         //NOTE: like the names in the ToXml impl, these names and namespaces are SOAP standard
-        if src.name.local_name != "Envelope" || src.name.namespace != Some(SOAP_NS.into()) {
+        if src.name != sulfate_xml::Name::new("Envelope", SOAP_NS, "s") {
             return Err(SoapError::NotSoapEnvelope);
         }
 
-        let body = src.first_child_where(|bod| bod.name.local_name == "Body" &&
-                                               bod.name.namespace == Some(SOAP_NS.into()));
+        let body = src.first_child_where(|bod| bod.name == sulfate_xml::Name::new("Body", SOAP_NS, "s"));
         if body.is_none() {
             return Err(SoapError::NotSoapEnvelope);
         }
@@ -132,14 +131,11 @@ impl FromXml for GetDataResponse {
     type Error = IServiceError;
 
     fn from_xml(src: &Element) -> Result<Self, IServiceError> {
-        if src.name.local_name != "GetDataResponse" ||
-           src.name.namespace != Some(SVC_NS.into())
-        {
+        if src.name != sulfate_xml::Name::new_default_ns("GetDataResponse", SVC_NS) {
             return Err(IServiceError);
         }
 
-        let result = src.first_child_where(|res| res.name.local_name == "GetDataResult" &&
-                                                 res.name.namespace == Some(SVC_NS.into()));
+        let result = src.first_child_where(|res| res.name == sulfate_xml::Name::new_default_ns("GetDataResult", SVC_NS));
 
         match result.and_then(|r| r.content.first()) {
             Some(&ElemContent::Text(ref text)) => Ok(GetDataResponse {
