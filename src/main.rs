@@ -33,8 +33,8 @@ struct SoapEnvelope<T>(T);
 
 impl<T: ToXml> ToXml for SoapEnvelope<T> {
     fn to_xml(&self) -> Element {
-        let mut envelope = Element::new_ns_prefix("Envelope", SOAP_NS, "s");
-        let mut body = Element::new_ns_prefix("Body", SOAP_NS, "s");
+        let mut envelope = Element::new("Envelope", SOAP_NS, "s");
+        let mut body = Element::new("Body", SOAP_NS, "s");
         body.push_child(self.0.to_xml());
         envelope.push_child(body);
         envelope
@@ -108,7 +108,7 @@ impl ToXml for GetDataRequest {
     fn to_xml(&self) -> Element {
         //NOTE: the element names and namespaces are yanked from the WSDL
         let mut ret = sulfate_xml::Element::new_default_ns("GetData", SVC_NS);
-        let mut value = sulfate_xml::Element::new("value");
+        let mut value = sulfate_xml::Element::new_no_ns("value");
         value.push_text(self.value.to_string());
         ret.push_child(value);
         ret
